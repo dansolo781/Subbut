@@ -1,0 +1,34 @@
+⚽ SubbuteoWatcher
+{% if stats.last_scan %} Ultima scansione: {{ stats.last_scan[:16].replace('T',' ') }} {% else %} Nessuna scansione ancora {% endif %}
+🔄 Scansiona ora
+{{ stats.total }}
+Annunci totali
+{{ stats.today }}
+Oggi
+{% for c in stats.by_country %}
+{% endfor %}
+Cerca nei titoli…
+
+Più recenti prima
+{{ listings|length }} annunci
+{% if listings %} {% for l in listings %}
+{% if l.image_url %}
+{{ l.country_flag }}
+{% else %}
+{{ l.country_flag }}
+{% endif %}
+{{ l.site }}
+{{ l.country_flag }}
+{{ l.title }}
+{% if l.price %}
+{{ l.price }}
+{% else %}
+Prezzo non indicato
+{% endif %}
+{{ l.found_at[:10] }}
+{% endfor %} {% else %}
+⚽
+Nessun annuncio trovato ancora.
+Premi Scansiona ora per iniziare.
+
+{% endif %}
