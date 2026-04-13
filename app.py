@@ -1,11 +1,12 @@
-"""
-Subbuteo Watcher — Flask app principale
-"""
-from flask import Flask, render_template, jsonify
-from scraper import SubbuteoScraper
-from database import Database
-from scheduler import start_scheduler
+import os
 import threading
+import logging
+from flask import Flask, render_template, jsonify
+from database import Database
+from scraper import SubbuteoScraper
+from scheduler import start_scheduler
+
+logging.basicConfig(level=logging.INFO)
 
 app = Flask(__name__)
 db = Database()
@@ -19,8 +20,7 @@ def index():
 
 @app.route("/api/listings")
 def api_listings():
-    listings = db.get_all_listings()
-    return jsonify(listings)
+    return jsonify(db.get_all_listings())
 
 @app.route("/api/stats")
 def api_stats():
@@ -28,7 +28,6 @@ def api_stats():
 
 @app.route("/api/scan")
 def api_scan():
-    """Avvia una scansione manuale"""
     thread = threading.Thread(target=scraper.run_all)
     thread.daemon = True
     thread.start()
@@ -36,4 +35,5 @@ def api_scan():
 
 if __name__ == "__main__":
     start_scheduler(scraper)
-    app.run(debug=True, port=5000, use_reloader=False)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=False, use_reloader=False)
